@@ -21,7 +21,7 @@ const Header = ({ title, user, role, setOpenSidebar }) => {
 						<IoIosArrowDown />
 					</div>
 					<div className={`absolute right-0 mt-3 bg-indigo-950 w-40 rounded-md font-semibold transform transition-all duration-300 text-white ${openProfile ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'} ${openProfile ? 'block' : 'hidden'}`}>
-						<Link to="/profile" className="mb-1 hover:text-indigo-950 hover:bg-gray-300 px-4 py-2 rounded-md transition-colors duration-300 flex items-center gap-2">
+						<Link to="/login" className="mb-1 hover:text-indigo-950 hover:bg-gray-300 px-4 py-2 rounded-md transition-colors duration-300 flex items-center gap-2">
 							<IoIosPerson />
 							Profil
 						</Link>
