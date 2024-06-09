@@ -10,11 +10,13 @@ import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice"
 import getErrorMessage from "../utils/ErrorMessage"
 import { decodeToken } from "../utils/TokenManger"
 import { userLogin } from "../app/features/auth/authSlice"
+import Cookies from 'universal-cookie'
 
 
 const LoginForm = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const cookies = new Cookies();
 
 	const loading = useSelector(state => state.loading)
 	const [errorMessage, setErrorMessage] = useState('');
@@ -33,7 +35,11 @@ const LoginForm = () => {
 			dispatch(setLoading());
 			const { data } = await loginUser(values);
 			const user = decodeToken(data.accessToken);
+			const token = decodeToken(data.refreshToken);
 			dispatch(userLogin({ user: user, accessToken: data.accessToken }));
+			cookies.set("token", data.refreshToken, {
+				expires: new Date(token.exp * 1000),
+			});
 			resetForm();
 			setErrorMessage('');
 			navigate('/')
