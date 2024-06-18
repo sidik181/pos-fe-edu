@@ -42,5 +42,5 @@ Header.propTypes = {
 	title: PropTypes.string.isRequired,
 	user: PropTypes.string.isRequired,
 	role: PropTypes.string.isRequired,
-	setOpenSidebar: PropTypes.bool.isRequired,
+	setOpenSidebar: PropTypes.func.isRequired,
 }

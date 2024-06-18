@@ -1,6 +1,7 @@
+import { addOrder } from "../app/api/transactions";
 import Table from "./Table/Table";
 
-const Cart = () => {
+const Cart = ({ dataOrder }) => {
 	const columns = ['Nama Produk', 'Harga', 'Qty', 'Sub Total'];
 	const data = [
 		{ No: '1', "Nama Produk": 'John Doe', Harga: 28, Qty: '123' },
@@ -11,6 +12,11 @@ const Cart = () => {
 		{ No: '6', "Nama Produk": 'Carol White', Harga: 27, Qty: '303' },
 		{ No: '7', "Nama Produk": 'Sam Johnson', Harga: 21, Qty: '789' },
 	]
+
+	const handleSubmitOrder = async (idProduct, qty) => {
+		await addOrder(idProduct, qty);
+	};
+
 	return (
 		<div className="text-gray-800 flex flex-col gap-3">
 			<Table
@@ -30,7 +36,7 @@ const Cart = () => {
 				<h1>Total Pembayaran</h1>
 				<h2>Rp 110.000</h2>
 			</div>
-			<button className="bg-blue-600 py-3 text-white rounded-md font-medium hover:bg-blue-800 shadow-sm">Bayar</button>
+			<button onClick={() => handleSubmitOrder()} className="bg-blue-600 py-3 text-white rounded-md font-medium hover:bg-blue-800 shadow-sm">Bayar</button>
 		</div>
 	)
 }

@@ -1,10 +1,18 @@
-import { useSelector } from 'react-redux';
 import { twMerge } from 'tailwind-merge';
 import PropTypes from 'prop-types';
 
-const Table = ({ columns, tableClassName, trHeadClassName, trBodyClassName, headerClassName, cellClassName, firstColumnClassName, data, renderCustomRow }) => {
-	const { currentPage, pageSize } = useSelector((state) => state.product);
-
+const Table = ({
+	data,
+	columns,
+	columnMapping,
+	tableClassName,
+	trHeadClassName,
+	trBodyClassName,
+	cellClassName,
+	renderCustomRow,
+	currentPage,
+	pageSize,
+}) => {
 	const paginatedData = data.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
 	return (
@@ -12,8 +20,9 @@ const Table = ({ columns, tableClassName, trHeadClassName, trBodyClassName, head
 			<table className={twMerge("min-w-full bg-white border text-center shadow-sm border-gray-200", tableClassName)}>
 				<thead>
 					<tr className={twMerge("bg-gray-100 border-b", trHeadClassName)}>
-						{columns.map((column, index) => (
-							<th key={column} className={twMerge("py-2 px-4 border font-semibold text-md", headerClassName, index === 0 && firstColumnClassName)}>{column}</th>
+					<th  className="py-2 px-4 border font-semibold text-md w-16">No</th>
+						{columns.map((column) => (
+							<th key={column} className="py-2 px-4 border font-semibold text-md">{column}</th>
 						))}
 						{renderCustomRow && <th className="py-2 px-4 border font-semibold text-md">Aksi</th>}
 					</tr>
@@ -26,16 +35,16 @@ const Table = ({ columns, tableClassName, trHeadClassName, trBodyClassName, head
 					) : (
 						paginatedData.map((row, rowIndex) => (
 							<tr className={twMerge("hover:bg-gray-100 border-b", trBodyClassName)} key={rowIndex}>
-								{columns.map((column, colIndex) => (
+								<td className="border px-4 py-2">{currentPage * pageSize + rowIndex + 1}</td>
+								{columns.map((column) => (
 									<td
 										key={column}
 										className={twMerge(
 											"border px-4 py-2 whitespace-nowrap",
 											cellClassName,
-											colIndex === 0 && firstColumnClassName
 										)}
 									>
-										{row[column]}
+										{row[columnMapping[column]]}
 									</td>
 								))}
 								{renderCustomRow && (
@@ -56,12 +65,15 @@ export default Table;
 
 Table.propTypes = {
 	columns: PropTypes.array.isRequired,
+	columnMapping: PropTypes.object.isRequired,
 	tableClassName: PropTypes.string,
 	trHeadClassName: PropTypes.string,
 	firstColumnClassName: PropTypes.string,
 	trBodyClassName: PropTypes.string,
 	headerClassName: PropTypes.string,
 	cellClassName: PropTypes.string,
-	data: PropTypes.array,
+	data: PropTypes.array.isRequired,
 	renderCustomRow: PropTypes.func,
-}
+	currentPage: PropTypes.number.isRequired,
+	pageSize: PropTypes.number.isRequired,
+};

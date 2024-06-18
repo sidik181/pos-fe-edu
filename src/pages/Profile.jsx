@@ -1,10 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Layout from "./Layout";
+import { getProfile } from "../app/api/auth";
 
 const Profile = () => {
+	const [profile, setProfile] = useState({});
+
+	const fetchProfile = async () => {
+		const { data } = await getProfile();
+		setProfile(data)
+	}
 
 	useEffect(() => {
-
+		fetchProfile
 	}, [])
 	return (
 		<Layout>
@@ -14,19 +21,19 @@ const Profile = () => {
 					<tbody>
 						<tr className="border border-gray-500">
 							<td className="py-2 px-4 border border-gray-500 font-bold bg-gray-300">Nama</td>
-							<td className="py-2 px-4">Sidik Komarudiansah</td>
+							<td className="py-2 px-4">{profile.full_name}</td>
 						</tr>
 						<tr className="border border-gray-500">
 							<td className="py-2 px-4 border border-gray-500 bg-gray-300 font-bold">Email</td>
-							<td className="py-2 px-4">owner@gmail.com</td>
+							<td className="py-2 px-4">{profile.email}</td>
 						</tr>
 						<tr className="border border-gray-500">
 							<td className="py-2 px-4 border border-gray-500 bg-gray-300 font-bold">Hak Akses</td>
-							<td className="py-2 px-4">Owner</td>
+							<td className="py-2 px-4">{profile.role}</td>
 						</tr>
 						<tr className="border border-gray-500">
 							<td className="py-2 px-4 border border-gray-500 bg-gray-300 font-bold">Jumlah Pemjualan</td>
-							<td className="py-2 px-4">10</td>
+							<td className="py-2 px-4"></td>
 						</tr>
 					</tbody>
 				</table>

@@ -10,24 +10,21 @@ const Layout = ({ children }) => {
 	const [title, setTitle] = useState('')
 
 	useEffect(() => {
-		switch (location.pathname) {
-			case '/order':
-				setTitle('Pembelian');
-				break;
-			case '/transactions':
-				setTitle('Transaksi');
-				break;
-			case '/settings':
-				setTitle('Pengaturan');
-				break;
-			case '/profile':
-				setTitle('Profil');
-				break;
-			default:
-				setTitle('Dashboard');
-				break;
+		const pathname = location.pathname;
+		if (pathname.startsWith('/order')) {
+			setTitle('Pembelian');
+		} else if (pathname.startsWith('/transactions')) {
+			setTitle('Transaksi');
+		} else if (pathname.startsWith('/settings')) {
+			setTitle('Pengaturan');
+		} else if (pathname.startsWith('/profile')) {
+			setTitle('Profil');
+		} else if (pathname === '/') {
+			setTitle('Dashboard');
+		} else {
+			setTitle('');
 		}
-	}, [location.pathname, setTitle])
+	}, [location.pathname]);
 
 	return (
 		<div className="flex h-screen">
