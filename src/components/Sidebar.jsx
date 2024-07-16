@@ -6,7 +6,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CgShoppingCart } from "react-icons/cg";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import SidebarItem from "./SidebarItem";
+import SidebarItem from "./SidebarItem.jsx";
 
 function Sidebar({ open }) {
   const user = useSelector((state) => state.auth.user);
