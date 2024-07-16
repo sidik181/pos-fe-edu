@@ -1,21 +1,15 @@
-import axios from 'axios'
+import apiInstance from '../../hooks/apiInstance';
 
 const API_URL = import.meta.env.VITE_BE_URI;
 
 export const getProducts = async () => {
-	return await axios.get(`${API_URL}/api/products`, {
-		withCredentials: true
-	});
+	return await apiInstance.get(`${API_URL}/api/products`);
 }
 
 export const addProduct = async data => {
-	return await axios.post(`${API_URL}/api/products`, data, {
-		withCredentials: true
-	});
+	return await apiInstance.post(`${API_URL}/api/products`, data);
 }
 
 export const deleteProduct = async idProduct => {
-	return await axios.delete(`${API_URL}/api/products/${idProduct}`, {
-		withCredentials: true
-	});
+	return await apiInstance.delete(`${API_URL}/api/products/${idProduct}`);
 }

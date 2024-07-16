@@ -3,11 +3,13 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Layout = ({ children }) => {
 	const location = useLocation();
 	const [openSidebar, setOpenSidebar] = useState(false);
-	const [title, setTitle] = useState('')
+	const [title, setTitle] = useState('');
+	const user = useSelector(state => state.auth.user)
 
 	useEffect(() => {
 		const pathname = location.pathname;
@@ -27,16 +29,19 @@ const Layout = ({ children }) => {
 	}, [location.pathname]);
 
 	return (
-		<div className="flex h-screen">
-			<Sidebar open={openSidebar} />
-			<div className="flex-grow flex flex-col">
-				<Header title={title} user="Sidik Komarudiansah" role="Owner" setOpenSidebar={() => setOpenSidebar(!openSidebar)} />
-				<div className="flex-grow overflow-y-auto">
-					{children}
-				</div>
-			</div>
-		</div>
-	);
+    <div className="flex h-screen">
+      <Sidebar open={openSidebar} />
+      <div className="flex-grow flex flex-col">
+        <Header
+          title={title}
+          user={user.full_name}
+          role={user.role === "owner" ? "Owner" : "Cashier"}
+          setOpenSidebar={() => setOpenSidebar(!openSidebar)}
+        />
+        <div className="flex-grow overflow-y-auto">{children}</div>
+      </div>
+    </div>
+  );
 };
 
 Layout.propTypes = {

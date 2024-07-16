@@ -1,21 +1,32 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BE_URI;
 
-export const loginUser = async data => {
-	return await axios.post(`${API_URL}/api/login`, data, {
-		withCredentials: true,
-	});
-};
-
-export const getProfile = async () => {
-	return axios.get('/api/profile', {
+export const loginUser = async (data) => {
+  return await axios.post(`${API_URL}/api/login`, data, {
 		withCredentials: true
 	});
 };
 
-export const refreshTokenAPI = async () => {
-	return await axios.post(`${API_URL}/api/session-token`, {}, {
-		withCredentials: true
-	});
+export const refreshAccessToken = async () => {
+  return await axios.post(
+    `${API_URL}/api/refresh-token`,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+};
+
+export const logoutUser = async (accessToken) => {
+  return await axios.post(
+    `${API_URL}/api/logout`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      withCredentials: true,
+    }
+  );
 };

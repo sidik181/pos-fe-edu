@@ -1,52 +1,32 @@
-import { useEffect, useState } from "react";
+import { Outlet, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
-import Cookies from 'js-cookie';
-import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
-import { getProfile } from "../app/api/auth";
-import { setUser } from "../app/features/auth/authSlice";
+import { useEffect, useState } from "react";
+import { refreshToken } from "../app/features/auth/authService";
+import Loading from "../components/Loading";
 
 const ProtectedRoute = () => {
-  const [profileFetched, setProfileFetched] = useState(false);
-  const token = useSelector(state => state.auth.accessToken);
-  const refreshToken = Cookies.get('token');
   const dispatch = useDispatch();
-
-  const auth = useSelector(state => state.auth);
-  const processAuth = useSelector(state => state.loading);
-  const navigate = useNavigate();
+  const accessToken = useSelector(state => state.auth.accessToken);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        dispatch(setLoading());
-        const { data } = await getProfile(token);
-        dispatch(setUser(data.data));
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      } finally {
-        setProfileFetched(true);
-        dispatch(unsetLoading());
-      }
+    const fetchToken = async () => {
+      await dispatch(refreshToken());
+      setLoading(false);
     };
 
-    if (!profileFetched) {
-      fetchProfile();
+    if (!accessToken) {
+      fetchToken();
+    } else {
+      setLoading(false);
     }
-  }, [dispatch, token, refreshToken, profileFetched]);
+  }, [dispatch, accessToken]);
 
-  useEffect(() => {
-    if (!processAuth && profileFetched) {
-      if (auth.user === null) {
-        navigate('/login', { replace: true });
-      } else if (auth.user.role !== 'owner') {
-        navigate('/unauthorized', { replace: true });
-      }
-    }
-  }, [auth.user, processAuth, profileFetched, navigate]);
+  if (loading) {
+    return <Loading />;
+  }
 
-
-  return <Outlet />;
-}
+  return accessToken ? <Outlet /> : <Navigate to="/login" />;
+};
 
 export default ProtectedRoute;
