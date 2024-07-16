@@ -4,9 +4,9 @@ import { RxDashboard } from "react-icons/rx";
 import { GrTransaction } from "react-icons/gr";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CgShoppingCart } from "react-icons/cg";
-import SidebarItem from "./SidebarItem.jsx";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import SidebarItem from "./SidebarItem";
 
 function Sidebar({ open }) {
   const user = useSelector((state) => state.auth.user);
