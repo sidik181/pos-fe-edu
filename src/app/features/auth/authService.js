@@ -27,11 +27,9 @@ export const refreshToken = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   "auth/logout",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const state = getState();
-      const accessToken = state.auth.accessToken;
-      const response = await logoutUser(accessToken);
+      const response = await logoutUser();
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);

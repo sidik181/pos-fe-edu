@@ -6,7 +6,7 @@ import Loading from "../components/Loading";
 
 const ProtectedRoute = () => {
   const dispatch = useDispatch();
-  const accessToken = useSelector(state => state.auth.accessToken);
+  const {accessToken, status} = useSelector(state => state.auth);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,12 +15,12 @@ const ProtectedRoute = () => {
       setLoading(false);
     };
 
-    if (!accessToken) {
+    if (!accessToken && status !== "idle") {
       fetchToken();
     } else {
       setLoading(false);
     }
-  }, [dispatch, accessToken]);
+  }, [dispatch, accessToken, status]);
 
   if (loading) {
     return <Loading />;

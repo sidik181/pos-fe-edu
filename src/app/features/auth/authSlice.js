@@ -11,9 +11,6 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    setAccessToken: (state, action) => {
-      state.accessToken = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -44,9 +41,15 @@ const authSlice = createSlice({
         state.user = null;
         state.status = "idle";
         state.error = null;
+      })
+      .addCase(logout.rejected, (state) => {
+        state.accessToken = null;
+        state.accessTokenExpiresAt = null;
+        state.user = null;
+        state.status = "idle";
+        state.error = null;
       });
   },
 });
 
-export const { setAccessToken } = authSlice.actions;
 export default authSlice.reducer;

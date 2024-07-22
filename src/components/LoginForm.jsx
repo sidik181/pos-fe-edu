@@ -5,12 +5,13 @@ import { CustomInput } from "./FormInput";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../app/features/auth/authService";
+import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const status = useSelector((state) => state.auth);
+  const loading = useSelector((state) => state.loading);
   const errorMessage = useSelector((state) => state.auth.error);
 
   const initialValues = {
@@ -28,10 +29,13 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values, { resetForm }) => {
+    dispatch(setLoading());
     const result = await dispatch(login(values));
     if (login.fulfilled.match(result)) {
+      dispatch(unsetLoading());
       navigate("/");
     }
+    dispatch(unsetLoading());
     resetForm();
   };
 
@@ -80,9 +84,9 @@ const LoginForm = () => {
                 />
                 <button
                   type="submit"
-                  disabled={!isValid || !dirty || status === "pending"}
+                  disabled={!isValid || !dirty || loading}
                   className={`${
-                    !dirty || !isValid || status === "pending"
+                    !dirty || !isValid || loading
                       ? "bg-blue-300"
                       : "bg-blue-500 hover:bg-blue-700"
                   }  text-white font-semibold rounded-md px-8 py-2`}

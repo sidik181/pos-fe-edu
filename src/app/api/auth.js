@@ -18,14 +18,11 @@ export const refreshAccessToken = async () => {
   );
 };
 
-export const logoutUser = async (accessToken) => {
+export const logoutUser = async () => {
   return await axios.post(
     `${API_URL}/api/logout`,
     {},
     {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
       withCredentials: true,
     }
   );
