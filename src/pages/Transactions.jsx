@@ -4,10 +4,13 @@ import Pagination from "../components/Pagination/Pagination";
 import { useState, useEffect } from "react";
 import { approveOrRejectOrder, getOrder } from "../app/api/transactions";
 import TransactionDetail from "../components/TransactionDetail";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
 
 const Transactions = () => {
+  const dispatch = useDispatch();
+
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const user = useSelector(state => state.auth.user);
@@ -32,6 +35,7 @@ const Transactions = () => {
 
   const fetchDataTransaction = async () => {
     try {
+      dispatch(setLoading());
       const { data } = await getOrder();
       const modifiedData = data.data.map((item) => ({
         ...item,
@@ -41,6 +45,8 @@ const Transactions = () => {
       setDataTransaction(modifiedData);
     } catch (err) {
       console.error(`Error fetching transaction, ${err}`);
+    } finally {
+      dispatch(unsetLoading());
     }
   };
 

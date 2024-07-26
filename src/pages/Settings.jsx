@@ -3,9 +3,14 @@ import Table from "../components/Table/Table";
 import { deleteProduct, getProducts } from "../app/api/products";
 import Pagination from "../components/Pagination/Pagination";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
 
 const Settings = () => {
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(0);
+  const [data, setData] = useState([]);
   const pageSize = 10;
 
   const columns = ["Nama Produk", "Harga", "Stok"];
@@ -14,8 +19,6 @@ const Settings = () => {
     Harga: "price",
     Stok: "stock",
   };
-
-  const [data, setData] = useState([]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -34,16 +37,20 @@ const Settings = () => {
 
   const fetchDataPoducts = async () => {
     try {
+      dispatch(setLoading());
       const { data } = await getProducts();
       setData(data.data);
     } catch (err) {
       console.error(`Error fetching product, ${err}`);
+    } finally {
+      dispatch(unsetLoading());
     }
   };
 
   const handleDeleteProduct = async (idProduct) => {
     try {
       await deleteProduct(idProduct);
+      toast.success("Produk berhasil dihapus!");
       fetchDataPoducts();
     } catch (error) {
       console.error(error);

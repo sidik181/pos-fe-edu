@@ -7,6 +7,7 @@ import { getErrorMessage } from "../utils";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
+import { toast } from "react-toastify";
 
 const AddProduct = () => {
   const dispatch = useDispatch();
@@ -34,8 +35,10 @@ const AddProduct = () => {
     try {
       dispatch(setLoading());
       await addProduct(values);
+      toast.success("Produk berhasil ditambahkan!");
 			navigate("/settings");
     } catch (error) {
+      toast.success("Produk gagal ditambahkan!");
       setErrorMessage(getErrorMessage(error));
     } finally {
       resetForm();

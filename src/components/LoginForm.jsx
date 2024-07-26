@@ -34,9 +34,9 @@ const LoginForm = () => {
     const result = await dispatch(login(values));
     if (login.fulfilled.match(result)) {
       toast.success("Login berhasil!");
-      dispatch(unsetLoading());
       navigate("/");
     } else {
+      console.log(loading)
       toast.error("Login gagal! Periksa kembali email dan password Anda.");
     }
     

@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import PropTypes from "prop-types";
 import { formatPrice } from "../../utils";
+import { useSelector } from "react-redux";
 
 const Table = ({
   data,
@@ -14,6 +15,8 @@ const Table = ({
   currentPage,
   pageSize,
 }) => {
+  const loading = useSelector((state) => state.loading);
+
   const paginatedData = data.slice(
     currentPage * pageSize,
     (currentPage + 1) * pageSize
@@ -67,7 +70,7 @@ const Table = ({
                 colSpan={columns.length + (renderCustomRow ? 2 : 1)}
                 className="text-center py-4"
               >
-                Tidak ada data
+                {loading ? "Mengambil data ..." : "Tidak ada data"}
               </td>
             </tr>
           ) : (

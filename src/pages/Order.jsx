@@ -12,15 +12,22 @@ import { toast } from "react-toastify";
 
 const Order = () => {
   const dispatch = useDispatch();
+
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [dataProduct, setDataProducts] = useState([]);
   const items = useSelector(state => state.cart.items);
-
-  const [dataProduct, setDataProduct] = useState([]);
+  const loading = useSelector(state => state.loading);
 
   const fetchProduct = async () => {
-    const { data } = await getProducts();
-    setDataProduct(data.data);
+    try {
+      dispatch(setLoading());
+      const { data } = await getProducts();
+      setDataProducts(data.data);
+    } catch (error) {
+      console.error(`Error fetch produk: ${error}`);
+    } finally {
+      dispatch(unsetLoading());
+    }
   };
 
   const handleAddToCart = (product) => {
@@ -59,13 +66,17 @@ const Order = () => {
         <div className="flex flex-grow flex-col w-8/12">
           <h1 className="text-xl font-bold text-gray-800 mb-2">Produk</h1>
           <div className="flex gap-4 flex-wrap">
-            {dataProduct.map((product) => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                handleAddToCart={handleAddToCart}
-              />
-            ))}
+            {loading ? (
+              <h1 className="text-lg mt-2 text-gray-800">Mengambil data ...</h1>
+            ) : (
+              dataProduct.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  handleAddToCart={handleAddToCart}
+                />
+              ))
+            )}
           </div>
         </div>
         <div className="flex-grow">

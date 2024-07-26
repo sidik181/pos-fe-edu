@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 const TableProduct = ({ products }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 10;
+  const pageSize = 5;
 
   const columns = [
     "Nama Produk",
