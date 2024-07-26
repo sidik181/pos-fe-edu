@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../app/features/auth/authService";
+import { toast } from "react-toastify";
 
 const Header = ({ title, user, role, setOpenSidebar }) => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const Header = ({ title, user, role, setOpenSidebar }) => {
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/login");
+    toast.success("Berhasil logout!");
   };
 
   const [openProfile, setOpenProfile] = useState(false);

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../app/features/auth/authService";
 import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -32,9 +33,13 @@ const LoginForm = () => {
     dispatch(setLoading());
     const result = await dispatch(login(values));
     if (login.fulfilled.match(result)) {
+      toast.success("Login berhasil!");
       dispatch(unsetLoading());
       navigate("/");
+    } else {
+      toast.error("Login gagal! Periksa kembali email dan password Anda.");
     }
+    
     dispatch(unsetLoading());
     resetForm();
   };

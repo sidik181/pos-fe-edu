@@ -1,7 +1,31 @@
 import PropTypes from "prop-types";
 import { formatPrice } from "../utils";
+import Table from "./Table/Table";
+import { useState } from "react";
+import Pagination from "./Pagination/Pagination";
 
 const TransactionDetail = ({ transaction, onClose }) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 4;
+
+  const columns = [
+    "Nama Produk",
+    "Jumlah",
+    "Harga",
+    "Sub Total"
+  ];
+
+  const columnMapping = {
+    "Nama Produk": "product_name",
+    "Jumlah": "quantity",
+    "Harga": "price",
+    "Sub Total": "sub_total",
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-gray-800">
       <div className="bg-white p-6 rounded shadow-lg w-3/4 md:w-1/2 lg:w-1/3">
@@ -15,20 +39,23 @@ const TransactionDetail = ({ transaction, onClose }) => {
           <p>Total Harga: {formatPrice(transaction.total_price)}</p>
         </div>
         <div className="mt-4">
-          <h3 className="font-semibold">Detail Produk:</h3>
-          <ul>
-            {transaction.products.map((product, index) => (
-              <li
-                key={index}
-                className="border-b py-2"
-              >
-                <p>Nama Produk: {product.product_name}</p>
-                <p>Jumlah: {product.quantity}</p>
-                <p>Harga: {formatPrice(product.price)}</p>
-                <p>Sub Total: {formatPrice(product.sub_total)}</p>
-              </li>
-            ))}
-          </ul>
+          <h3 className="font-semibold mb-1">Detail Produk:</h3>
+          <Table
+            data={transaction.products}
+            columns={columns}
+            columnMapping={columnMapping}
+            tableClassName={"text-gray-800"}
+            currentPage={currentPage}
+            pageSize={pageSize}
+          />
+          {transaction.products.length > pageSize && (
+            <Pagination
+              currentPage={currentPage}
+              pageSize={pageSize}
+              totalItems={transaction.products.length}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
         <button
           onClick={onClose}

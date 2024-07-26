@@ -29,24 +29,26 @@ const authSlice = createSlice({
         state.accessToken = action.payload.accessToken;
         state.accessTokenExpiresAt = action.payload.accessTokenExpiresAt;
         state.user = action.payload.user;
+        state.status = "succeeded";
       })
       .addCase(refreshToken.rejected, (state) => {
         state.accessToken = null;
         state.accessTokenExpiresAt = null;
         state.user = null;
+        state.status = "idle"; 
       })
       .addCase(logout.fulfilled, (state) => {
         state.accessToken = null;
         state.accessTokenExpiresAt = null;
         state.user = null;
-        state.status = "idle";
+        state.status = "logout";
         state.error = null;
       })
       .addCase(logout.rejected, (state) => {
         state.accessToken = null;
         state.accessTokenExpiresAt = null;
         state.user = null;
-        state.status = "idle";
+        state.status = "logout";
         state.error = null;
       });
   },

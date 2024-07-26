@@ -4,10 +4,13 @@ import Pagination from "../components/Pagination/Pagination";
 import { useState, useEffect } from "react";
 import { approveOrRejectOrder, getOrder } from "../app/api/transactions";
 import TransactionDetail from "../components/TransactionDetail";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Transactions = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const user = useSelector(state => state.auth.user);
   const pageSize = 10;
 
   const columns = [
@@ -51,8 +54,9 @@ const Transactions = () => {
             : item
         )
       );
+      toast.success(`Produk berhasil ${status === "approve" ? "Disetujui": "Dibatalkan"}!`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -74,22 +78,22 @@ const Transactions = () => {
           >
             Lihat Detail
           </button>
-          <button
-            onClick={() =>
-              handleTransactionOrder(row._id, "approve")
-            }
-            className="bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded hover:text-white"
-          >
-            Setuju
-          </button>
-          <button
-            onClick={() =>
-              handleTransactionOrder(row._id, "rejected")
-            }
-            className="bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded hover:text-white"
-          >
-            Batalkan
-          </button>
+          {user.role === "owner" && (
+            <>
+              <button
+                onClick={() => handleTransactionOrder(row._id, "approve")}
+                className="bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded hover:text-white"
+              >
+                Setuju
+              </button>
+              <button
+                onClick={() => handleTransactionOrder(row._id, "rejected")}
+                className="bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded hover:text-white"
+              >
+                Batalkan
+              </button>
+            </>
+          )}
         </div>
       );
     } else {

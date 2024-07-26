@@ -8,6 +8,7 @@ import { addItemState, clearCartState } from "../app/features/cart/cartSlice";
 import { setLoading, unsetLoading } from "../app/features/loading/loadingSlice";
 import { getErrorMessage } from "../utils";
 import { addOrder } from "../app/api/transactions";
+import { toast } from "react-toastify";
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const Order = () => {
   const handleAddToCart = (product) => {
     const qty = 1;
     dispatch(addItemState({ ...product, qty, sub_total: product.price * qty }));
+    toast.success("Produk berhasil ditambahkan!");
   };
 
   const handleSubmitOrder = async () => {
@@ -37,8 +39,10 @@ const Order = () => {
       dispatch(setLoading());
       await addOrder({items: orderItems});
 			dispatch(clearCartState());
+      toast.success("Pembelian berhasil!");
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
+      toast.error("Pembelian gagal!");
     } finally {
 			setErrorMessage('')
 			dispatch(unsetLoading());

@@ -1,22 +1,40 @@
-import { twMerge } from 'tailwind-merge';
-import PropTypes from 'prop-types';
-import { formatPrice } from '../../utils';
+import { twMerge } from "tailwind-merge";
+import PropTypes from "prop-types";
+import { formatPrice } from "../../utils";
 
 const Table = ({
-	data,
-	columns,
-	columnMapping,
-	tableClassName,
-	trHeadClassName,
-	trBodyClassName,
-	cellClassName,
-	renderCustomRow,
-	currentPage,
-	pageSize,
+  data,
+  columns,
+  columnMapping,
+  tableClassName,
+  trHeadClassName,
+  trBodyClassName,
+  cellClassName,
+  renderCustomRow,
+  currentPage,
+  pageSize,
 }) => {
-	const paginatedData = data.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+  const paginatedData = data.slice(
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
+  );
 
-	return (
+  const renderStatus = (status) => {
+    switch (status) {
+      case "approve":
+        return <span className="text-green-600 font-bold">Disetujui</span>;
+      case "rejected":
+        return <span className="text-red-600 font-bold">Ditolak</span>;
+      case "pending":
+        return (
+          <span className="text-yellow-600 font-bold">
+            Menunggu Persetujuan
+          </span>
+        );
+    }
+  };
+
+  return (
     <div className="text-gray-800 w-full sm:w-auto overflow-x-auto">
       <table
         className={twMerge(
@@ -76,11 +94,13 @@ const Table = ({
                     column === "Harga" ||
                     column === "Sub Total"
                       ? formatPrice(row[columnMapping[column]])
+                      : column === "Status"
+                      ? renderStatus(row[columnMapping[column]])
                       : row[columnMapping[column]]}
                   </td>
                 ))}
-                {renderCustomRow && (
-                  <td className="border px-4 py-2 whitespace-nowrap, w-96">
+                {typeof renderCustomRow === "function" && (
+                  <td className="border px-4 py-2 whitespace-nowrap w-96">
                     {renderCustomRow(row)}
                   </td>
                 )}
@@ -91,21 +111,21 @@ const Table = ({
       </table>
     </div>
   );
-}
+};
 
 export default Table;
 
 Table.propTypes = {
-	data: PropTypes.array.isRequired,
-	columns: PropTypes.array.isRequired,
-	columnMapping: PropTypes.object,
-	tableClassName: PropTypes.string,
-	trHeadClassName: PropTypes.string,
-	firstColumnClassName: PropTypes.string,
-	trBodyClassName: PropTypes.string,
-	headerClassName: PropTypes.string,
-	cellClassName: PropTypes.string,
-	renderCustomRow: PropTypes.func,
-	currentPage: PropTypes.number,
-	pageSize: PropTypes.number
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  columnMapping: PropTypes.object,
+  tableClassName: PropTypes.string,
+  trHeadClassName: PropTypes.string,
+  firstColumnClassName: PropTypes.string,
+  trBodyClassName: PropTypes.string,
+  headerClassName: PropTypes.string,
+  cellClassName: PropTypes.string,
+  renderCustomRow: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  currentPage: PropTypes.number,
+  pageSize: PropTypes.number,
 };

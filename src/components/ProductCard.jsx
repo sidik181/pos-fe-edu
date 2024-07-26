@@ -5,7 +5,7 @@ import {
   removeItemState,
   updateProductQuantityState,
 } from "../app/features/cart/cartSlice";
-import { MdOutlineDeleteForever } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ product, handleAddToCart }) => {
   const dispatch = useDispatch();
@@ -23,6 +23,7 @@ const ProductCard = ({ product, handleAddToCart }) => {
         sub_total: newSubTotal,
       })
     );
+    toast.success("Produk berhasil ditambahkan!");
   };
 
   const handleDecreaseQty = () => {
@@ -37,13 +38,16 @@ const ProductCard = ({ product, handleAddToCart }) => {
           sub_total: newSubTotal,
         })
       );
+      toast.success("Produk berhasil dikurangi!");
     } else {
       dispatch(removeItemState({ id: product._id }));
+      toast.success("Berhasil hapus produk dari keranjang!");
     }
   };
 
   const handleDeleteCartItem = () => {
     dispatch(removeItemState({ id: product._id }));
+    toast.success("Berhasil hapus produk dari keranjang!");
   };
 
   return (
@@ -63,22 +67,22 @@ const ProductCard = ({ product, handleAddToCart }) => {
         {itemInCart ? (
           <div className="flex justify-between items-center px-3 gap-3 my-3">
             <button
-              onClick={handleDecreaseQty}
-              className="px-3 py-1 text-white bg-yellow-600 hover:bg-yellow-800 rounded-md w-full"
-            >
-              -
-            </button>
-            <button
               onClick={handleIncreaseQty}
               className="px-3 py-1 text-white bg-green-600 hover:bg-green-800 rounded-md w-full"
             >
               +
             </button>
             <button
-              onClick={handleDeleteCartItem}
-              className="px-3 py-2 text-white bg-red-600 hover:bg-red-800 rounded-md w-full"
+              onClick={handleDecreaseQty}
+              className="px-3 py-1 text-white bg-yellow-600 hover:bg-yellow-800 rounded-md w-full"
             >
-              <MdOutlineDeleteForever className="w-full"/>
+              -
+            </button>
+            <button
+              onClick={handleDeleteCartItem}
+              className="px-4 py-1 text-white bg-red-600 hover:bg-red-800 rounded-md w-full"
+            >
+              Hapus
             </button>
           </div>
         ) : (
