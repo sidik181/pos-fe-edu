@@ -34,6 +34,8 @@ const Table = ({
             Menunggu Persetujuan
           </span>
         );
+      default:
+        return "";
     }
   };
 

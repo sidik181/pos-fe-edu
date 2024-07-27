@@ -26,6 +26,19 @@ const TransactionDetail = ({ transaction, onClose }) => {
     setCurrentPage(newPage);
   };
 
+  const renderStatus = (status) => {
+    switch (status) {
+      case "approve":
+        return "Disetujui";
+      case "rejected":
+        return "Ditolak";
+      case "pending":
+        return "Menunggu Persetujuan";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-gray-800">
       <div className="bg-white p-6 rounded shadow-lg w-3/4 md:w-1/2 lg:w-1/3">
@@ -33,7 +46,7 @@ const TransactionDetail = ({ transaction, onClose }) => {
         <div className="font-semibold">
           <p>Tanggal Pembelian: {transaction.created_at}</p>
           <p>Kasir: {transaction.cashier}</p>
-          <p>Status: {transaction.status}</p>
+          <p>Status: {renderStatus(transaction.status)}</p>
           <p>Jumlah Produk: {transaction.products.length}</p>
           <p>Jumlah Pembelian: {transaction.total_quantity}</p>
           <p>Total Harga: {formatPrice(transaction.total_price)}</p>

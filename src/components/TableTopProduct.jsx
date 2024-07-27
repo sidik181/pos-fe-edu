@@ -1,10 +1,8 @@
-import { useState } from "react";
-import Pagination from "./Pagination/Pagination";
 import Table from "./Table/Table";
 import PropTypes from "prop-types";
 
 const TableTopProduct = ({ orders }) => {
-  const [currentPage, setCurrentPage] = useState(0);
+  const currentPage = 0;
   const pageSize = 5;
 
   const approvedOrders = orders.filter((order) => order.status === "approve");
@@ -30,6 +28,7 @@ const TableTopProduct = ({ orders }) => {
     })
   );
   const sortedProducts = productArray.sort((a, b) => b.quantity - a.quantity);
+  const topProducts = sortedProducts.slice(0,5);
 
   const columns = [
     "Nama Produk",
@@ -45,31 +44,19 @@ const TableTopProduct = ({ orders }) => {
     "Jumlah Pendapatan": "total",
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-
   return (
     <div className="flex-grow">
       <h1 className="text-gray-800 my-2 font-bold text-xl text-center">
         Produk Penjualan Teratas
       </h1>
       <Table
-        data={sortedProducts}
+        data={topProducts}
         columns={columns}
         columnMapping={columnMapping}
         tableClassName={"text-gray-800"}
         currentPage={currentPage}
         pageSize={pageSize}
       />
-      {sortedProducts.length > pageSize && (
-        <Pagination
-          currentPage={currentPage}
-          pageSize={pageSize}
-          totalItems={sortedProducts.length}
-          onPageChange={handlePageChange}
-        />
-      )}
     </div>
   );
 };
