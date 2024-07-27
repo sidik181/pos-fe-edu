@@ -13,6 +13,11 @@ const ProductCard = ({ product, handleAddToCart }) => {
   const itemInCart = cartItems.find((item) => item._id === product._id);
 
   const handleIncreaseQty = () => {
+    if (itemInCart.qty >= product.stock) {
+      toast.error("Stok tidak tersedia, gagal menambahkan!");
+      return;
+    }
+
     const newQty = itemInCart.qty + 1;
     const newSubTotal = product.price * newQty;
 
@@ -87,8 +92,13 @@ const ProductCard = ({ product, handleAddToCart }) => {
           </div>
         ) : (
           <button
+            disabled={product.stock === 0}
             onClick={() => handleAddToCart(product)}
-            className="px-3 py-1 my-3 text-white bg-blue-600 hover:bg-blue-800 rounded-md"
+            className={`${
+              product.stock === 0
+                ? "cursor-not-allowed bg-blue-400"
+                : "bg-blue-600 hover:bg-blue-800"
+            } px-3 py-1 my-3 text-white rounded-md`}
           >
             Tambahkan ke Keranjang
           </button>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { refreshToken } from "../app/features/auth/authService";
-import history from "./history";
+import { useRedirectToLogin } from "./useNavigate";
 import store from "../app/store";
 
 const apiInstance = axios.create({
@@ -31,13 +31,12 @@ apiInstance.interceptors.response.use(
       try {
         const result = await store.dispatch(refreshToken());
         if (refreshToken.fulfilled.match(result)) {
-          axios.defaults.headers.Authorization[
-            "Authorization"
-          ] = `Bearer ${result.payload.accessToken}`;
-          return axios(originalRequest);
+          apiInstance.defaults.headers.Authorization = `Bearer ${result.payload.accessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${result.payload.accessToken}`;
+          return apiInstance(originalRequest);
         }
       } catch (error) {
-        history.push("/login");
+        useRedirectToLogin();
       }
     }
 
